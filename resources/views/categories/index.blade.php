@@ -6,5 +6,22 @@
    </div>
    <div class="card card-default">
        <div class="card card-header">Categories</div>
+       <div class="card-body">
+           <table class="table">
+               <thead>
+                   <th>Name</th>
+               </thead>
+               <tbody>
+                   @foreach ($categories as $category)
+                       <tr>
+                            <td>{{$category->name}}</td>
+                            <td>
+                                <a href="{{ route('categories.edit', $category->id) }}" class="btn btn-info">Edit</a>
+                            </td>
+                       </tr>
+                   @endforeach
+               </tbody>
+           </table>
+       </div>
    </div>
 @endsection

@@ -74,6 +74,11 @@
 
         <main class="py-4">
             <div class="container">
+                @if (session()->has('message'))
+                   <div class="alert alert-success">
+                       {{session()->get('message')}}
+                   </div>
+                @endif
                 @auth
                 <div class="row">
                         <div class="col-md-4">
@@ -81,7 +86,7 @@
                                 <a href="#" class="list-group-item">Posts</a>
                             </li>
                             <li class="list-group">
-                                <a href="#" class="list-group-item">Categories</a>
+                                <a href="{{ route('categories.index') }}" class="list-group-item">Categories</a>
                             </li>
                         </div>
                         <div class="col-md-8">

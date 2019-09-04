@@ -10,19 +10,28 @@
        <div class="card-body">
             <table class="table">
                 <thead>
-                    <th>Name</th>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th></th>
                     <th></th>
                 </thead>
                 <tbody>
                     @foreach ($posts as $post)
                         <tr>
-                             <td>{{$post->title}}</td>
                              <td>
-                                 <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-info">Edit</a>
+                                 <img src="{{ asset('storage/'.$post->image) }}" width="80px" height="60px" alt="">
                              </td>
+                             <td>{{$post->title}}</td>
+                            @if (!$post->trashed())
+                            <td>
+                                    <a href="{{ route('posts.edit', $post->id) }}" class="btn btn-info">Edit</a>
+                                </td>
+                            @endif
                              <td>
                                     <a href="javascript:;" data-toggle="modal" onclick="deleteData({{$post->id}})"
-                                            data-target="#DeleteModal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                            data-target="#DeleteModal" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i>
+                                            {{$post->trashed()? "Delete" : "Trash"}}
+                                        </a>
                              </td>
                         </tr>
                     @endforeach

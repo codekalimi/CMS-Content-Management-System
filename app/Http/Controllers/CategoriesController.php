@@ -76,8 +76,9 @@ class CategoriesController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        $category->name = $request->name;
-        $category->save();
+        $category->update([
+            'name' => $request->name
+        ]);
 
         session()->flash('message','Category Updated Successfully');
         return redirect(route('categories.index'));
@@ -89,8 +90,11 @@ class CategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        $category->delete();
+
+        session()->flash('message','Category Deleted Successfully');
+        return redirect(route('categories.index'));
     }
 }

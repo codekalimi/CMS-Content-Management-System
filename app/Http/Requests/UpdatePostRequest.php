@@ -24,10 +24,9 @@ class UpdatePostRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required | unique:posts',
+            'title' => 'required',
             'description' => 'required',
             'content' => 'required',
-            'publish_at' => 'nullable|date'
         ];
     }
 }

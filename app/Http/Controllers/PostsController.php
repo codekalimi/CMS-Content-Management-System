@@ -82,13 +82,19 @@ class PostsController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        $post->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'content' => $request->content,
-            'image' => $request->image,
-            'published_at' => $request->published_at
-        ]);
+        $data = $request->only(['title','description','content','published_at']);
+        //check for new image
+        if ($request->hasFile('image')) {
+            //store the new image
+            $image = $request->image->store('posts');
+            //delete the old image
+            $post->deleteImage();
+
+            $data['image']= $image;
+        }
+
+        //update all data
+        $post->update($data);
 
         session()->flash('message','Post updated successfully!');
         return redirect(route('posts.index'));
@@ -104,7 +110,7 @@ class PostsController extends Controller
     {
         $post = Post::withTrashed()->where('id',$id)->firstOrFail();
         if ($post->trashed()) {
-            Storage::delete($post->image);
+            $post->deleteImage();
             $post->forceDelete();
         } else {
             $post->delete();
@@ -118,7 +124,6 @@ class PostsController extends Controller
     /**
      * Display a listing all of the trashed posts.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
 
@@ -127,4 +132,18 @@ class PostsController extends Controller
          $trashed = Post::onlyTrashed()->get();
          return view('posts.index')->withPosts($trashed);
      }
+
+     /**
+     * Restore the trashed posts.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $post = Post::withTrashed()->where('id',$id)->firstOrFail();
+
+        $post->restore();
+
+        return redirect(route('posts.index'));
+    }
 }
